@@ -23,25 +23,16 @@ for c in lines[-1]:
         spaces = 0
 ws.append(spaces + 1)
 
-js = []  # js[i] = True if column i is left justified
-offset = 0
-i = 0
-while offset < len(lines[0]):
-    column = [line[offset : offset + ws[i]] for line in lines[:-1]]
-    js.append(any(line[-1] == " " for line in column))
-    offset += ws[i] + 1
-    i += 1
-
 total = 0
-for i, op in enumerate(ops):
-    n = 1 if op == "*" else 0
-    column = [str(row[i]) for row in ns]
-    if not js[i]:
-        column = [s[::-1] for s in column]
-    max_len = max(len(s) for s in column)
-    for j in range(max_len):
-        num = int("".join([s[j] if j < len(s) else "" for s in column]))
-        n = n * num if op == "*" else n + num
+offset = 0
+for i, w in enumerate(ws):
+    n = 1 if ops[i] == "*" else 0
+    column = [line[offset : offset + w][::-1] for line in lines[:-1]]
+    for j in range(w):
+        num = int("".join([s[j] for s in column]))
+        n = n * num if ops[i] == "*" else n + num
     total += n
+    offset += w + 1
+    i += 1
 
 print(total)
